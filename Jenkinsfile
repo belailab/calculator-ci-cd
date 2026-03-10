@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        sonarQubeScanner 'sonar-scanner'
+    }
+
     stages {
 
         stage('Checkout Code') {
@@ -27,21 +31,14 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('SonarQube Analysis') {
             steps {
-                sh '''
-                echo Building Docker Image...
-                docker build -t calculator-api .
-                '''
-            }
-        }
-
-        stage('Deploy to Kubernetes') {
-            steps {
-                sh '''
-                echo Deploying to Kubernetes...
-                kubectl apply -f k8s/
-                '''
+                withSonarQubeEnv('sonarqube-server') {
+                    sh '''
+                    echo Running SonarQube analysis...
+                    sonar-scanner
+                    '''
+                }
             }
         }
 
