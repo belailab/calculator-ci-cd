@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        sonarRunner 'sonar-scanner'
+    }
+
     stages {
 
         stage('Checkout Code') {
@@ -30,10 +34,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube-server') {
-                    sh '''
-                    echo Running SonarQube analysis...
-                    sonar-scanner
-                    '''
+                    sh 'sonar-scanner'
                 }
             }
         }
