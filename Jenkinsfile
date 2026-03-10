@@ -27,16 +27,16 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('sonarqube-server') {
-                    sh '''
-                    echo Running SonarQube analysis...
-                    /var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonar-scanner/bin/sonar-scanner
-                    '''
-                }
-            }
-        }
-
+        
+	stage('SonarQube Analysis') {
+	    steps {
+	        withSonarQubeEnv('sonarqube-server') {
+	            sh '''
+	            echo Running SonarQube analysis...
+	            /opt/sonar-scanner/bin/sonar-scanner
+	            '''
+	        }
+	    }
+	}
     }
 }
