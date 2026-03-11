@@ -12,7 +12,6 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                echo Installing dependencies...
                 pip3 install --user -r requirements.txt
                 '''
             }
@@ -21,22 +20,28 @@ pipeline {
         stage('Run Tests') {
             steps {
                 sh '''
-                echo Running tests...
                 python3 -m pytest
                 '''
             }
         }
 
-        
-	stage('SonarQube Analysis') {
-	    steps {
-	        withSonarQubeEnv('sonarqube-server') {
-	            sh '''
-	            echo Running SonarQube analysis...
-	            /opt/sonar-scanner/bin/sonar-scanner
-	            '''
-	        }
-	    }
-	}
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonarqube-server') {
+                    sh '''
+                    /opt/sonar-scanner/bin/sonar-scanner
+                    '''
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                docker build -t calculator-api .
+                '''
+            }
+        }
+
     }
 }
